@@ -1,7 +1,6 @@
-# @12luckydev/utils
+# @12luckydev/array-handler
 
-[![npm (scoped)](https://img.shields.io/npm/v/@12luckydev/utils)](https://www.npmjs.com/package/@12luckydev/array-handler)
-[![npm bundle size (scoped)](https://img.shields.io/bundlephobia/min/@12luckydev/array-handler)](https://github.com/12LuckyDev)
+[![npm (scoped)](https://img.shields.io/npm/v/@12luckydev/array-handler)](https://www.npmjs.com/package/@12luckydev/array-handler)
 
 Wrapped functions for handle operations on array without mutation
 
