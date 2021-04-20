@@ -1,6 +1,6 @@
 {
-  "name": "array-handler",
-  "version": "0.0.0",
+  "name": "@12luckydev/array-handler",
+  "version": "0.0.1",
   "description": "Handler for to perform operations on arrays without mutating",
   "keywords": [
     "array",
