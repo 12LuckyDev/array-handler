@@ -1,18 +1,19 @@
-import { add, editAt, editPropAt, removeAt } from '@12luckydev/utils';
+import { add, editAt, editPropAt, removeAt, moveDown, moveUp } from '@12luckydev/utils';
 
 export enum ARRAY_OPERATION {
-  ADD,
-  EDIT_AT,
-  EDIT_PROP_AT,
-  REMOVE_AT,
+  ADD = 0,
+  EDIT_AT = 1,
+  EDIT_PROP_AT = 2,
+  REMOVE_AT = 3,
+  MOVE_UP = 4,
+  MOVE_DOWN = 5,
 }
 
 type addArgs<T> = { newValue: T };
 type editAtArgs<T> = { newValue: T; index: number };
-type removeAtArgs = { index: number };
+type onluIndexArgs = { index: number };
 type editPropAtArgs<T, K extends keyof T> = { index: number; key: K; propValue: T[K] };
-
-type allArgs<T, K extends keyof T> = addArgs<T> | editAtArgs<T> | removeAtArgs | editPropAtArgs<T, K>;
+type allArgs<T, K extends keyof T> = addArgs<T> | editAtArgs<T> | onluIndexArgs | editPropAtArgs<T, K>;
 
 /**
  * Performs the given operation on the array
@@ -27,7 +28,11 @@ function arrayHandler<T, K extends keyof T>(
   operation: ARRAY_OPERATION.EDIT_PROP_AT,
   args: editPropAtArgs<T, K>,
 ): T[];
-function arrayHandler<T>(array: T[], operation: ARRAY_OPERATION.REMOVE_AT, args: removeAtArgs): T[];
+function arrayHandler<T>(
+  array: T[],
+  operation: ARRAY_OPERATION.REMOVE_AT | ARRAY_OPERATION.MOVE_DOWN | ARRAY_OPERATION.MOVE_UP,
+  args: onluIndexArgs,
+): T[];
 function arrayHandler<T, K extends keyof T>(array: T[], operation: ARRAY_OPERATION, args: allArgs<T, K>): T[] {
   switch (operation) {
     case ARRAY_OPERATION.ADD:
@@ -42,10 +47,14 @@ function arrayHandler<T, K extends keyof T>(array: T[], operation: ARRAY_OPERATI
         (args as editPropAtArgs<T, keyof T>).index,
       );
     case ARRAY_OPERATION.REMOVE_AT:
-      return removeAt(array, (args as removeAtArgs).index);
+      return removeAt(array, (args as onluIndexArgs).index);
+    case ARRAY_OPERATION.MOVE_DOWN:
+      return moveDown(array, (args as onluIndexArgs).index);
+    case ARRAY_OPERATION.MOVE_UP:
+      return moveUp(array, (args as onluIndexArgs).index);
     default:
       return array;
   }
 }
 
-export { arrayHandler };
+export default arrayHandler;
