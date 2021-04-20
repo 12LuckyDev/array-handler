@@ -1,5 +1,8 @@
 import { add, editAt, editPropAt, removeAt, moveDown, moveUp } from '@12luckydev/utils';
 
+/**
+ * Array operations types
+ */
 export enum ARRAY_OPERATION {
   ADD = 0,
   EDIT_AT = 1,
@@ -9,11 +12,14 @@ export enum ARRAY_OPERATION {
   MOVE_DOWN = 5,
 }
 
-type addArgs<T> = { newValue: T };
-type editAtArgs<T> = { newValue: T; index: number };
-type onluIndexArgs = { index: number };
-type editPropAtArgs<T, K extends keyof T> = { index: number; key: K; propValue: T[K] };
-type allArgs<T, K extends keyof T> = addArgs<T> | editAtArgs<T> | onluIndexArgs | editPropAtArgs<T, K>;
+/**
+ * All args types
+ */
+type allArgs<T, K extends keyof T> =
+  | { newValue: T }
+  | { newValue: T; index: number }
+  | { index: number }
+  | { index: number; key: K; propValue: T[K] };
 
 /**
  * Performs the given operation on the array
@@ -21,37 +27,39 @@ type allArgs<T, K extends keyof T> = addArgs<T> | editAtArgs<T> | onluIndexArgs 
  * @param operation Type of operation
  * @param args Operation arguments
  */
-function arrayHandler<T>(array: T[], operation: ARRAY_OPERATION.ADD, args: addArgs<T>): T[];
-function arrayHandler<T>(array: T[], operation: ARRAY_OPERATION.EDIT_AT, args: editAtArgs<T>): T[];
+function arrayHandler<T>(array: T[], operation: ARRAY_OPERATION.ADD, args: { newValue: T }): T[];
+function arrayHandler<T>(array: T[], operation: ARRAY_OPERATION.EDIT_AT, args: { newValue: T; index: number }): T[];
+function arrayHandler<T>(array: T[], operation: ARRAY_OPERATION.REMOVE_AT, args: { index: number }): T[];
+function arrayHandler<T>(array: T[], operation: ARRAY_OPERATION.MOVE_DOWN, args: { index: number }): T[];
+function arrayHandler<T>(array: T[], operation: ARRAY_OPERATION.MOVE_UP, args: { index: number }): T[];
 function arrayHandler<T, K extends keyof T>(
   array: T[],
   operation: ARRAY_OPERATION.EDIT_PROP_AT,
-  args: editPropAtArgs<T, K>,
-): T[];
-function arrayHandler<T>(
-  array: T[],
-  operation: ARRAY_OPERATION.REMOVE_AT | ARRAY_OPERATION.MOVE_DOWN | ARRAY_OPERATION.MOVE_UP,
-  args: onluIndexArgs,
+  args: { index: number; key: K; propValue: T[K] },
 ): T[];
 function arrayHandler<T, K extends keyof T>(array: T[], operation: ARRAY_OPERATION, args: allArgs<T, K>): T[] {
   switch (operation) {
     case ARRAY_OPERATION.ADD:
-      return add(array, (args as addArgs<T>).newValue);
+      return add(array, (args as { newValue: T }).newValue);
     case ARRAY_OPERATION.EDIT_AT:
-      return editAt(array, (args as editAtArgs<T>).newValue, (args as editAtArgs<T>).index);
+      return editAt(
+        array,
+        (args as { newValue: T; index: number }).newValue,
+        (args as { newValue: T; index: number }).index,
+      );
     case ARRAY_OPERATION.EDIT_PROP_AT:
       return editPropAt(
         array,
-        (args as editPropAtArgs<T, keyof T>).key,
-        (args as editPropAtArgs<T, keyof T>).propValue,
-        (args as editPropAtArgs<T, keyof T>).index,
+        (args as { index: number; key: K; propValue: T[K] }).key,
+        (args as { index: number; key: K; propValue: T[K] }).propValue,
+        (args as { index: number; key: K; propValue: T[K] }).index,
       );
     case ARRAY_OPERATION.REMOVE_AT:
-      return removeAt(array, (args as onluIndexArgs).index);
+      return removeAt(array, (args as { index: number }).index);
     case ARRAY_OPERATION.MOVE_DOWN:
-      return moveDown(array, (args as onluIndexArgs).index);
+      return moveDown(array, (args as { index: number }).index);
     case ARRAY_OPERATION.MOVE_UP:
-      return moveUp(array, (args as onluIndexArgs).index);
+      return moveUp(array, (args as { index: number }).index);
     default:
       return array;
   }
