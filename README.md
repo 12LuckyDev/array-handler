@@ -70,6 +70,26 @@ const editPropAtResultArray =
  *   { id: 3, name: 'c' }];
  */
 
+/**
+ * changeHandler
+ * Add a function as the 4th argument if you want to edit the entire array after performing the operation
+*/
+
+const changeHandler = ({
+  operation,
+  newArray,
+  oldArray,
+  newValue,
+  index,
+  key,
+  propValue,
+}) => {
+  return newArray.map((el) => el * 2);
+}
+
+const changeHandlerResultArray = arrayHandler(simpleInput, ARRAY_OPERATION.ADD, { newValue: 4 }, changeHandler);
+
+//result: [2, 4, 6, 8]
 ```
 
 ## License

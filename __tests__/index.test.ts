@@ -52,6 +52,14 @@ test('TEST simpleInput no change', () => {
   simpleInput.forEach((el, i) => expect(el).toEqual(expectedArray[i]));
 });
 
+test('changeHandler test', () => {
+  const resultArray = arrayHandler(simpleInput, ARRAY_OPERATION.ADD, { newValue: 4 }, ({ newArray }) => {
+    return newArray.map((el) => el * 2);
+  });
+  const expectedArray = [2, 4, 6, 8];
+  resultArray.forEach((el, i) => expect(el).toEqual(expectedArray[i]));
+});
+
 test('TEST objectInput no change', () => {
   const expectedArray = [
     { id: 1, name: 'a' },
