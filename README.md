@@ -10,10 +10,10 @@ Using [@12luckydev/utils](https://www.npmjs.com/package/@12luckydev/utils)
 
 ```sh
 # using npm
-npm i @12luckydev/@12luckydev/array-handler
+npm i @12luckydev/array-handler
 
 # using yarn
-yarn add 12luckydev/@12luckydev/array-handler
+yarn add @12luckydev/array-handler
 ```
 
 ## Usage examples
@@ -24,31 +24,40 @@ import arrayHandler, { ARRAY_OPERATION } from '@12luckydev/array-handler';
 const simpleInput = [1, 2, 3];
 
 //ADD
-const addResultArray = arrayHandler(simpleInput, ARRAY_OPERATION.ADD, { newValue: 4 });
+const addResultArray = arrayHandler(simpleInput, { operation: ARRAY_OPERATION.ADD, newValue: 4 });
 
 //result: [1, 2, 3, 4]
 
 
 //EDIT_AT
-const editAtResultArray = arrayHandler(simpleInput, ARRAY_OPERATION.EDIT_AT, { newValue: 4, index: 1 });
+const editAtResultArray = arrayHandler(simpleInput, { operation: ARRAY_OPERATION.EDIT_AT, newValue: 4, index: 1 });
 
 //result: [1, 4, 3]
 
 
 //REMOVE_AT
-const removeAtResultArray = arrayHandler(simpleInput, ARRAY_OPERATION.REMOVE_AT, { index: 1 });
+const removeAtResultArray = arrayHandler(simpleInput, {
+    operation: ARRAY_OPERATION.REMOVE_AT,
+    index: 1,
+  });
 
 //result: [1, 3]
 
 
 //MOVE_UP
-const moveUpResultArray = arrayHandler(simpleInput, ARRAY_OPERATION.MOVE_UP, { index: 1 });
+const moveUpResultArray = arrayHandler(simpleInput, {
+    operation: ARRAY_OPERATION.MOVE_UP,
+    index: 1,
+  });
 
 //result: [1, 3, 2]
 
 
 //MOVE_DOWN
-const moveUpResultArray = arrayHandler(simpleInput, ARRAY_OPERATION.MOVE_DOWN, { index: 1 });
+const moveUpResultArray = arrayHandler(simpleInput, {
+    operation: ARRAY_OPERATION.MOVE_DOWN,
+    index: 1,
+  });
 
 //result: [2, 1, 3]
 
@@ -62,7 +71,12 @@ const objectInput = [
 ];
 
 const editPropAtResultArray =
-    arrayHandler(objectInput, ARRAY_OPERATION.EDIT_PROP_AT, { index: 1, key: 'id', propValue: 4 });
+    arrayHandler(objectInput, {
+    operation: ARRAY_OPERATION.EDIT_PROP_AT,
+    index: 1,
+    key: 'id',
+    propValue: 4,
+  });
 
 /** result:
  *  [{ id: 1, name: 'a' },
@@ -76,21 +90,24 @@ const editPropAtResultArray =
 */
 
 const changeHandler = ({
-  operation,
   newArray,
   oldArray,
-  newValue,
-  index,
-  key,
-  propValue,
+  opt,
 }) => {
   return newArray.map((el) => el * 2);
 }
 
-const changeHandlerResultArray = arrayHandler(simpleInput, ARRAY_OPERATION.ADD, { newValue: 4 }, changeHandler);
+const changeHandlerResultArray = arrayHandler(simpleInput, { operation: ARRAY_OPERATION.ADD, newValue: 4 }, changeHandler);
 
 //result: [2, 4, 6, 8]
 ```
+
+## Changelog
+
+### v2.0
+
+- Moved operation to options object to simplify function input arguments
+- Changed arrayHandler input arguments
 
 ## License
 

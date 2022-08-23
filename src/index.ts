@@ -4,118 +4,58 @@ import { add, editAt, editPropAt, removeAt, moveDown, moveUp } from '@12luckydev
  * Array operations types
  */
 export enum ARRAY_OPERATION {
-  ADD = 0,
-  EDIT_AT = 1,
-  EDIT_PROP_AT = 2,
-  REMOVE_AT = 3,
-  MOVE_UP = 4,
-  MOVE_DOWN = 5,
+  ADD = 'ADD',
+  EDIT_AT = 'EDIT_AT',
+  EDIT_PROP_AT = 'EDIT_PROP_AT',
+  REMOVE_AT = 'REMOVE_AT',
+  MOVE_UP = 'MOVE_UP',
+  MOVE_DOWN = 'MOVE_DOWN',
 }
 
 /**
- * All args types
+ * Arguments type
  */
-type allArgs<T, K extends keyof T> =
-  | { newValue: T }
-  | { newValue: T; index: number }
-  | { index: number }
-  | { index: number; key: K; propValue: T[K] };
+type optType<T, K extends keyof T> =
+  | { operation: ARRAY_OPERATION.ADD; newValue: T }
+  | { operation: ARRAY_OPERATION.EDIT_AT; newValue: T; index: number }
+  | { operation: ARRAY_OPERATION.REMOVE_AT | ARRAY_OPERATION.MOVE_DOWN | ARRAY_OPERATION.MOVE_UP; index: number }
+  | { operation: ARRAY_OPERATION.EDIT_PROP_AT; index: number; key: K; propValue: T[K] };
 
 /**
  * Array handler type
  */
-type changeHandlerType<T, K extends keyof T> = (args: {
-  operation: ARRAY_OPERATION;
-  newArray: T[];
-  oldArray: T[];
-  newValue?: T;
-  index?: number;
-  key?: K;
-  propValue?: T[K];
-}) => T[];
+type changeHandlerType<T, K extends keyof T> = (args: { newArray: T[]; oldArray: T[]; opt: optType<T, K> }) => T[];
 
-/**
- * Performs the given operation on the array
- * @param array Original array
- * @param operation Type of operation
- * @param args Operation arguments
- */
 function arrayHandler<T, K extends keyof T>(
   array: T[],
-  operation: ARRAY_OPERATION.ADD,
-  args: { newValue: T },
-  changeHandler?: changeHandlerType<T, K>,
-): T[];
-function arrayHandler<T, K extends keyof T>(
-  array: T[],
-  operation: ARRAY_OPERATION.EDIT_AT,
-  args: { newValue: T; index: number },
-  changeHandler?: changeHandlerType<T, K>,
-): T[];
-function arrayHandler<T, K extends keyof T>(
-  array: T[],
-  operation: ARRAY_OPERATION.REMOVE_AT,
-  args: { index: number },
-  changeHandler?: changeHandlerType<T, K>,
-): T[];
-function arrayHandler<T, K extends keyof T>(
-  array: T[],
-  operation: ARRAY_OPERATION.MOVE_DOWN,
-  args: { index: number },
-  changeHandler?: changeHandlerType<T, K>,
-): T[];
-function arrayHandler<T, K extends keyof T>(
-  array: T[],
-  operation: ARRAY_OPERATION.MOVE_UP,
-  args: { index: number },
-  changeHandler?: changeHandlerType<T, K>,
-): T[];
-function arrayHandler<T, K extends keyof T>(
-  array: T[],
-  operation: ARRAY_OPERATION.EDIT_PROP_AT,
-  args: { index: number; key: K; propValue: T[K] },
-  changeHandler?: changeHandlerType<T, K>,
-): T[];
-function arrayHandler<T, K extends keyof T>(
-  array: T[],
-  operation: ARRAY_OPERATION,
-  args: allArgs<T, K>,
+  opt: optType<T, K>,
   changeHandler?: changeHandlerType<T, K>,
 ): T[] {
   let newArray = [];
-  switch (operation) {
+  switch (opt.operation) {
     case ARRAY_OPERATION.ADD:
-      newArray = add(array, (args as { newValue: T }).newValue);
+      newArray = add(array, opt.newValue);
       break;
     case ARRAY_OPERATION.EDIT_AT:
-      newArray = editAt(
-        array,
-        (args as { newValue: T; index: number }).newValue,
-        (args as { newValue: T; index: number }).index,
-      );
+      newArray = editAt(array, opt.newValue, opt.index);
       break;
     case ARRAY_OPERATION.EDIT_PROP_AT:
-      newArray = editPropAt(
-        array,
-        (args as { index: number; key: K; propValue: T[K] }).key,
-        (args as { index: number; key: K; propValue: T[K] }).propValue,
-        (args as { index: number; key: K; propValue: T[K] }).index,
-      );
+      newArray = editPropAt(array, opt.key, opt.propValue, opt.index);
       break;
     case ARRAY_OPERATION.REMOVE_AT:
-      newArray = removeAt(array, (args as { index: number }).index);
+      newArray = removeAt(array, opt.index);
       break;
     case ARRAY_OPERATION.MOVE_DOWN:
-      newArray = moveDown(array, (args as { index: number }).index);
+      newArray = moveDown(array, opt.index);
       break;
     case ARRAY_OPERATION.MOVE_UP:
-      newArray = moveUp(array, (args as { index: number }).index);
+      newArray = moveUp(array, opt.index);
       break;
     default:
       newArray = array;
       break;
   }
-  return changeHandler ? changeHandler({ operation, newArray, oldArray: array, ...args }) : newArray;
+  return changeHandler ? changeHandler({ newArray, oldArray: array, opt }) : newArray;
 }
 
 export default arrayHandler;
