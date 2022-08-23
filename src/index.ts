@@ -13,9 +13,9 @@ export enum ARRAY_OPERATION {
 }
 
 /**
- * Arguments type
+ * Options type
  */
-type optType<T, K extends keyof T> =
+export type ArrayHandlerOptType<T, K extends keyof T> =
   | { operation: ARRAY_OPERATION.ADD; newValue: T }
   | { operation: ARRAY_OPERATION.EDIT_AT; newValue: T; index: number }
   | { operation: ARRAY_OPERATION.REMOVE_AT | ARRAY_OPERATION.MOVE_DOWN | ARRAY_OPERATION.MOVE_UP; index: number }
@@ -24,11 +24,15 @@ type optType<T, K extends keyof T> =
 /**
  * Array handler type
  */
-type changeHandlerType<T, K extends keyof T> = (args: { newArray: T[]; oldArray: T[]; opt: optType<T, K> }) => T[];
+type changeHandlerType<T, K extends keyof T> = (args: {
+  newArray: T[];
+  oldArray: T[];
+  opt: ArrayHandlerOptType<T, K>;
+}) => T[];
 
 function arrayHandler<T, K extends keyof T>(
   array: T[],
-  opt: optType<T, K>,
+  opt: ArrayHandlerOptType<T, K>,
   changeHandler?: changeHandlerType<T, K>,
 ): T[] {
   let newArray = [];
